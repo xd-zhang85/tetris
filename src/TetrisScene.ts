@@ -11,12 +11,12 @@ export const SHAPES = [
     [[1, 1, 1], [0, 1, 0]],
     [[1, 1, 1], [1, 0, 0]],
     [[1, 1, 1], [0, 0, 1]]
-] as const;
+];
 
 // 方块的颜色
 export const COLORS = [
     0x00FFFF, 0xFFFF00, 0xFFA500, 0x00FF00, 0xFF00FF, 0xFF0000, 0x0000FF
-] as const;
+];
 
 // 方块下落的时间间隔（毫秒）
 const FALL_INTERVAL = 500;
@@ -26,10 +26,10 @@ const INITIAL_BLOCK_COUNT = 3;
 
 export default class TetrisScene extends Phaser.Scene {
     private board: number[][];
-    private currentPiece: typeof SHAPES[number];
-    private currentX: number;
-    private currentY: number;
-    private pieceColor: typeof COLORS[number];
+    private currentPiece!: typeof SHAPES[number];
+    private currentX!: number;
+    private currentY!: number;
+    private pieceColor!: typeof COLORS[number];
     private blockSize: number = 30;
     private fallEvent: Phaser.Time.TimerEvent | null = null;
     private graphics: Phaser.GameObjects.Graphics | null = null;
@@ -40,6 +40,7 @@ export default class TetrisScene extends Phaser.Scene {
     constructor() {
         super('TetrisScene');
         this.tetrisService = Container.get(TetrisService);
+        this.board = Array.from({ length: 20 }, () => Array(10).fill(0));
     }
 
     preload() {
@@ -47,7 +48,6 @@ export default class TetrisScene extends Phaser.Scene {
     }
 
     create() {
-        this.board = Array.from({ length: 20 }, () => Array(10).fill(0));
         this.addInitialBlocks();
         this.newPiece();
 
@@ -75,8 +75,8 @@ export default class TetrisScene extends Phaser.Scene {
             const randomShape = SHAPES[randomShapeIndex];
             const randomColor = COLORS[randomShapeIndex];
             let validPosition = false;
-            let randomX: number;
-            let randomY: number;
+            let randomX!: number;
+            let randomY!: number;
 
             while (!validPosition) {
                 randomX = Phaser.Math.Between(0, 10 - randomShape[0].length);
