@@ -6,7 +6,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, watchEffect } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import Phaser from 'phaser';
 import { useTetrisStore } from './tetrisStore';
 
@@ -51,8 +51,7 @@ onMounted(() => {
   }
 });
 
-watchEffect(() => {
-  console.log('watchEffect')
+watch([() => store.nextPiece, () => store.nextPieceColor], () => {
   drawNextPiece();
 });
 
