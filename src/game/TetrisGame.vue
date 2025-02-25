@@ -3,6 +3,9 @@
     <div id="tetris-game"></div>
     <TetrisSideView />
   </div>
+  <div>
+    <TetrisSidebar />
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -10,6 +13,7 @@
   import Phaser from 'phaser'
   import TetrisScene from './TetrisScene'
   import TetrisSideView from './TetrisSideView.vue'
+  import TetrisSidebar from './TetrisSidebar.vue'
 
   onMounted(() => {
     const config: Phaser.Types.Core.GameConfig = {

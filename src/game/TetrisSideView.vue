@@ -2,18 +2,23 @@
   <div id="tetris-side-view">
     <p>Score: {{ score }}</p>
     <div ref="previewContainer"></div>
+    <div ref="miniGameContainer"></div>
   </div>
 </template>
 
 <script lang="ts" setup>
   import { ref, onMounted, watch } from 'vue'
   import Phaser from 'phaser'
-  import { useTetrisStore } from './tetrisStore'
+  import { useTetrisStore } from './TetrisStore'
 
   const store = useTetrisStore()
   const previewContainer = ref<HTMLDivElement | null>(null)
-  let previewGraphics: Phaser.GameObjects.Graphics | null = null
+  const miniGameContainer = ref<HTMLDivElement | null>(null)
   const blockSize = 30
+  const miniBlockSize = 10
+
+  let previewGraphics: Phaser.GameObjects.Graphics | null = null
+  let miniGameGraphics: Phaser.GameObjects.Graphics | null = null
 
   const drawNextPiece = () => {
     if (previewGraphics && store.nextPiece.length > 0) {
@@ -43,6 +48,32 @@
     }
   }
 
+  const drawMiniGameBoard = () => {
+    if (miniGameGraphics && store.miniBoard.length > 0) {
+      miniGameGraphics.clear()
+      for (let y = 0; y < store.miniBoard.length; y++) {
+        for (let x = 0; x < store.miniBoard[y].length; x++) {
+          if (store.miniBoard[y][x]) {
+            miniGameGraphics.fillStyle(store.miniBoard[y][x])
+            miniGameGraphics.fillRect(
+              x * miniBlockSize,
+              y * miniBlockSize,
+              miniBlockSize,
+              miniBlockSize
+            )
+            miniGameGraphics.lineStyle(1, 0x000000)
+            miniGameGraphics.strokeRect(
+              x * miniBlockSize,
+              y * miniBlockSize,
+              miniBlockSize,
+              miniBlockSize
+            )
+          }
+        }
+      }
+    }
+  }
+
   onMounted(() => {
     if (previewContainer.value) {
       const config: Phaser.Types.Core.GameConfig = {
@@ -59,11 +90,31 @@
       }
       new Phaser.Game(config)
     }
+
+    if (miniGameContainer.value) {
+      const miniGameConfig: Phaser.Types.Core.GameConfig = {
+        type: Phaser.AUTO,
+        width: 10 * miniBlockSize,
+        height: 20 * miniBlockSize,
+        parent: miniGameContainer.value,
+        scene: {
+          create() {
+            miniGameGraphics = this.add.graphics()
+            drawMiniGameBoard()
+          },
+        },
+      }
+      new Phaser.Game(miniGameConfig)
+    }
   })
 
-  watch([() => store.nextPiece, () => store.nextPieceColor], () => {
-    drawNextPiece()
-  })
+  watch(
+    [() => store.nextPiece, () => store.nextPieceColor, () => store.miniBoard],
+    () => {
+      drawNextPiece()
+      drawMiniGameBoard()
+    }
+  )
 
   const score = store.score
 </script>

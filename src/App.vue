@@ -5,9 +5,7 @@
 </template>
 
 <script lang="ts" setup>
-  import TetrisGame from './TetrisGame.vue'
+  import TetrisGame from './game/TetrisGame.vue'
 </script>
 
-<style scoped>
-  /* 可以根据需要添加全局样式 */
-</style>
+<style scoped></style>

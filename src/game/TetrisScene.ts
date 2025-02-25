@@ -40,7 +40,7 @@ export const COLORS = [
 const FALL_INTERVAL = 500
 
 // 游戏开始时额外生成的方块数量
-const INITIAL_BLOCK_COUNT = 3
+const INITIAL_BLOCK_COUNT = 5
 
 export default class TetrisScene extends Phaser.Scene {
   private board: number[][]
@@ -54,7 +54,7 @@ export default class TetrisScene extends Phaser.Scene {
   private tetrisService: TetrisService
   private particleEmitter: Phaser.GameObjects.Particles.ParticleEmitter | null =
     null
-  private firstLineCleared: boolean = false // 标记是否已经进行了第一次行消除
+  private firstLineCleared: boolean = false
 
   constructor() {
     super('TetrisScene')
@@ -72,6 +72,7 @@ export default class TetrisScene extends Phaser.Scene {
 
     this.graphics = this.add.graphics()
     this.drawBoard()
+    this.tetrisService.updateMiniBoard(this.board)
 
     this.input.keyboard?.on('keydown', this.handleKeyDown, this)
     this.fallEvent = this.time.addEvent({
@@ -82,7 +83,7 @@ export default class TetrisScene extends Phaser.Scene {
     })
 
     this.particleEmitter = this.add.particles(0, 0, 'particle')
-    // 确保初始化时粒子发射器不发射粒子
+
     if (this.particleEmitter) {
       this.particleEmitter.stop()
     }
@@ -99,7 +100,6 @@ export default class TetrisScene extends Phaser.Scene {
 
       while (!validPosition) {
         randomX = Phaser.Math.Between(0, 10 - randomShape[0].length)
-        // 确保随机方块的 Y 坐标不小于 12
         randomY = Phaser.Math.Between(12, 20 - randomShape.length)
         validPosition = this.canPlaceBlock(randomShape, randomX, randomY)
       }
@@ -260,6 +260,7 @@ export default class TetrisScene extends Phaser.Scene {
         }
       }
     }
+    this.tetrisService.updateMiniBoard(this.board)
   }
 
   private clearLines() {

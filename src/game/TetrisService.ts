@@ -1,6 +1,6 @@
 import 'reflect-metadata'
 import { Service } from 'typedi'
-import { useTetrisStore } from './tetrisStore'
+import { useTetrisStore } from './TetrisStore'
 
 @Service()
 export class TetrisService {
@@ -14,6 +14,10 @@ export class TetrisService {
     this.store.updateNextPiece(newNextPiece, newNextPieceColor)
   }
 
+  updateMiniBoard(miniBoard: number[][]) {
+    this.store.updateMiniBoard(miniBoard)
+  }
+
   getScore() {
     return this.store.score
   }
@@ -24,4 +28,12 @@ export class TetrisService {
       color: this.store.nextPieceColor,
     }
   }
+
+  moveLeft() {}
+
+  moveRight() {}
+
+  moveDown() {}
+
+  rotatePiece() {}
 }

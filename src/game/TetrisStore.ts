@@ -5,6 +5,7 @@ export const useTetrisStore = defineStore('tetris', {
     score: 0,
     nextPiece: [] as number[][],
     nextPieceColor: 0,
+    miniBoard: [] as number[][],
   }),
   actions: {
     updateScore(newScore: number) {
@@ -13,6 +14,9 @@ export const useTetrisStore = defineStore('tetris', {
     updateNextPiece(newNextPiece: number[][], newNextPieceColor: number) {
       this.nextPiece = newNextPiece
       this.nextPieceColor = newNextPieceColor
+    },
+    updateMiniBoard(board: number[][]) {
+      this.miniBoard = board
     },
   },
 })
