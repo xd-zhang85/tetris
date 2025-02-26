@@ -1,46 +1,12 @@
 import Phaser from 'phaser'
 import { Container } from 'typedi'
 import { TetrisService } from './TetrisService'
-
-// 方块的形状
-export const SHAPES = [
-  [[1, 1, 1, 1]],
-  [
-    [1, 1],
-    [1, 1],
-  ],
-  [
-    [1, 1, 0],
-    [0, 1, 1],
-  ],
-  [
-    [0, 1, 1],
-    [1, 1, 0],
-  ],
-  [
-    [1, 1, 1],
-    [0, 1, 0],
-  ],
-  [
-    [1, 1, 1],
-    [1, 0, 0],
-  ],
-  [
-    [1, 1, 1],
-    [0, 0, 1],
-  ],
-]
-
-// 方块的颜色
-export const COLORS = [
-  0x00ffff, 0xffff00, 0xffa500, 0x00ff00, 0xff00ff, 0xff0000, 0x0000ff,
-]
-
-// 方块下落的时间间隔（毫秒）
-const FALL_INTERVAL = 500
-
-// 游戏开始时额外生成的方块数量
-const INITIAL_BLOCK_COUNT = 5
+import {
+  SHAPES,
+  COLORS,
+  FALL_INTERVAL,
+  INITIAL_BLOCK_COUNT,
+} from './TetrisConstants'
 
 export default class TetrisScene extends Phaser.Scene {
   private board: number[][]
@@ -139,9 +105,16 @@ export default class TetrisScene extends Phaser.Scene {
   }
 
   private newPiece() {
-    const randomIndex = Phaser.Math.Between(0, SHAPES.length - 1)
-    this.currentPiece = SHAPES[randomIndex]
-    this.pieceColor = COLORS[randomIndex]
+    const nextPieceInfo = this.tetrisService.getNextPiece()
+
+    if (nextPieceInfo?.piece.length > 0) {
+      this.currentPiece = nextPieceInfo.piece
+      this.pieceColor = nextPieceInfo.color
+    } else {
+      const randomIndex = Phaser.Math.Between(0, SHAPES.length - 1)
+      this.currentPiece = SHAPES[randomIndex]
+      this.pieceColor = COLORS[randomIndex]
+    }
 
     const pieceWidth = this.currentPiece[0].length
     const maxX = 10 - pieceWidth
